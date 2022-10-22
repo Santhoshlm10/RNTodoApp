@@ -1,108 +1,84 @@
 import { StyleSheet, View, Alert, ListView, Text, TouchableOpacity, Image, ScrollView, SafeAreaView } from 'react-native';
 import { Button } from "react-native-paper";
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import AddTaskPage from './addtask';
-import AddNotesPage from '../notespage/addnote';
-import { useEffect, useState } from 'react';
-import Icon from 'react-native-vector-icons/MaterialIcons';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { useEffect, useState } from 'react';
+import SyncStorage from 'sync-storage';
+import NoTaskPage from './notaskpage';
+import { useSelector, useDispatch, connect } from "react-redux";
+import { TodoState } from '../../todoclient/reducers';
+import { Modal, Portal, Provider } from 'react-native-paper';
+
+interface TaskDetails {
+  title: string,
+  desc: string,
+  completed: boolean,
+  id: number
+}
 
 
-const Stack = createNativeStackNavigator();
-
-
-const TaskPage = (props: any) => {
-  const [showAddTask, setShowAddTask]: any = useState(false);
-
-  const getDataFromStore = async() => {
-    return await AsyncStorage.getItem('TASKS');
+class TaskPage extends React.Component<any, any> {
+  constructor(props: any) {
+    super(props);
+    this.state = {
+      showNoTaskView: true,
+      isDeleteModalVisible: false,
+    }
   }
 
-  useEffect(() => {
-    console.log("Itmessss",getDataFromStore());
-  },[])
 
-  return (
-    <SafeAreaView>
-      <View style={{ margin: 10 }}>
-        <View>
-          <Text style={{ fontSize: 40, color: 'black', fontFamily: 'Nunito-Regular' }}>My</Text>
-          <Text style={{ fontSize: 40, color: 'black', fontFamily: 'Nunito-Regular' }}>Tasks</Text>
-        </View>
-        <View>
+  static getDerivedStateFromProps(props: any, state: any) {
+    return state;
+  }
 
-          <ScrollView style={{ height: "83%" }}>
-            <Text>sdds</Text>
-            <Text>sdds</Text>
-            <Text>sdds</Text>
-            <Text>sdds</Text>
-            <Text>sdds</Text>
-            <Text>sdds</Text>
-            <Text>sdds</Text>
-            <Text>sdds</Text>
-            <Text>sdds</Text>
-            <Text>sdds</Text>
-            <Text>sdds</Text>
-            <Text>sdds</Text>
-            <Text>sdds</Text>
-            <Text>sdds</Text>
-            <Text>sdds</Text>
-            <Text>sdds</Text>
-            <Text>sdds</Text>
-            <Text>sdds</Text>
-            <Text>sdds</Text>
-            <Text>sdds</Text>
-            <Text>sdds</Text>
-            <Text>sdds</Text>
-            <Text>sdds</Text>
-            <Text>sdds</Text>
-            <Text>sdds</Text>
-            <Text>sdds</Text>
-            <Text>sdds</Text>
-            <Text>sdds</Text>
-            <Text>sdds</Text>
-            <Text>sdds</Text>
-            <Text>sdds</Text>
-            <Text>sdds</Text>
-            <Text>sdds</Text>
-            <Text>sdds</Text>
-            <Text>sdds</Text>
-            <Text>sdds</Text>
-            <Text>sdds</Text>
-            <Text>sdds</Text>
-            <Text>sdds</Text>
-            <Text>sdds</Text>
-            <Text>sdds</Text>
-            <Text>sdds</Text>
-            <Text>sdds</Text>
-            <Text>sdds</Text>
-            <Text>sdds</Text>
-            <Text>sdds</Text>
-            <Text>sdds</Text>
-            <Text>sdds</Text>
-            <Text>sdds</Text>
-            <Text>sdds</Text>
-            <Text>sdds</Text>
-            <Text>sdds</Text>
-            <Text>sdds</Text>
-            <Text>sdds</Text>
-            <Text>sdds</Text>
-            <Text>sdds</Text>
-            <Text>sdds</Text>
-            <Text>sdds</Text>
-            <Text>sdds</Text>
-            <Text>sdds</Text>
-            <Text>sdds</Text>
-            <Text>sdds</Text>
-            <Text>sdds</Text>
-          </ScrollView>
-          <Button labelStyle={{ fontFamily: "Nunito-Regular" }} buttonColor='#D3D3D3' textColor='black' mode="contained" onPress={() => props.navigation.navigate("AddTask")} style={styles.TouchableOpacityStyle} >
-            <Text style={{ fontFamily: "Nunito-Regular", fontSize: 20 }}>+ </Text>Create Task
-          </Button>
-        </View>
-      </View>
-    </SafeAreaView>
-  )
+  componentDidMount(): void {
+    this.props.navigation.addListener('focus', () => {
+      console.log('Screen.js focused', this.props)
+    });
+  }
+
+  onHideDeleteModal = () => {
+    this.setState({ isDeleteModalVisible: false })
+  }
+
+  onAddTaskButtonClick = () => {
+    this.props.navigation.navigate("AddTask")
+    // this.setState({ isDeleteModalVisible: true })
+  }
+
+  render(): React.ReactNode {
+    const containerStyle = { backgroundColor: 'white', padding: 20 };
+    return (
+      <Provider>
+        <Portal>
+            <Modal visible={this.state.isDeleteModalVisible} onDismiss={() => this.onHideDeleteModal()} contentContainerStyle={containerStyle}>
+              <Text style={styles.deleteTaskTitle}>Delete Task</Text>
+            </Modal>
+        </Portal>
+        <SafeAreaView>
+          <View style={{ margin: 10 }}>
+            <View>
+              <Text style={{ fontSize: 40, color: 'black', fontFamily: 'Nunito-Regular' }}>My</Text>
+              <Text style={{ fontSize: 40, color: 'black', fontFamily: 'Nunito-Regular' }}>Tasks</Text>
+            </View>
+            {/* <View>
+            <View style={styles.infoView}>
+              <Text style={styles.infoContent}>Swipe right to delete your task or swipe left to edit</Text>
+            </View>
+          </View> */}
+            <View>
+              <ScrollView style={{ height: "83%" }}>
+                {
+                  this.state.showNoTaskView && <NoTaskPage />
+                }
+              </ScrollView>
+              <Button labelStyle={{ fontFamily: "Nunito-Regular" }} buttonColor='#D3D3D3' textColor='black' mode="contained" onPress={() => this.onAddTaskButtonClick()} style={styles.TouchableOpacityStyle} >
+                <Text style={{ fontFamily: "Nunito-Regular", fontSize: 20 }}>+ </Text>Create Task
+              </Button>
+            </View>
+          </View>
+        </SafeAreaView>
+      </Provider>
+    );
+  }
 }
 
 
@@ -122,7 +98,26 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     right: 10,
     bottom: 30,
+  },
+  infoContent: {
+    fontFamily: 'Nunito-Regular',
+    fontSize: 12,
+    color: "black",
+    margin: 10,
+    textAlign: 'center'
+  },
+  infoView: {
+    marginTop: 10,
+    borderRadius: 5,
+    backgroundColor: "#DCDCDC"
+  },
+  deleteTaskTitle:{
+    fontFamily: 'Nunito-Regular',
+    fontSize: 17,
+    color: "black"
   }
 });
-
-export default TaskPage;
+const mapStateToProps = (state: any) => {
+  return state;
+}
+export default connect(mapStateToProps)(TaskPage);

@@ -1,12 +1,9 @@
-import { StyleSheet, View, Alert, ListView, Text, TouchableOpacity, Image, ScrollView, SafeAreaView } from 'react-native';
+import { StyleSheet, View, Text, ScrollView, SafeAreaView } from 'react-native';
 import { Button } from "react-native-paper";
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import NoNotesPage from './nonotespage';
 
 
-const Stack = createNativeStackNavigator();
-
-
-const NotesPage = () => {
+const NotesPage = (props:any) => {
   return (
     <SafeAreaView style={{ margin: 10 }}>
       <View>
@@ -14,88 +11,12 @@ const NotesPage = () => {
         <Text style={{ fontSize: 40, color: 'black', fontFamily: 'Nunito-Regular' }}>Notes</Text>
       </View>
       <View>
-
         <ScrollView style={{ height: "83%" }}>
-          <Text>sdds</Text>
-          <Text>sdds</Text>
-          <Text>sdds</Text>
-          <Text>sdds</Text>
-          <Text>sdds</Text>
-          <Text>sdds</Text>
-          <Text>sdds</Text>
-          <Text>sdds</Text>
-          <Text>sdds</Text>
-          <Text>sdds</Text>
-          <Text>sdds</Text>
-          <Text>sdds</Text>
-          <Text>sdds</Text>
-
-          <Text>sdds</Text>
-          <Text>sdds</Text>
-          <Text>sdds</Text>
-          <Text>sdds</Text>
-          <Text>sdds</Text>
-          <Text>sdds</Text>
-
-          <Text>sdds</Text>
-          <Text>sdds</Text>
-          <Text>sdds</Text>
-          <Text>sdds</Text>
-          <Text>sdds</Text>
-          <Text>sdds</Text>
-
-          <Text>sdds</Text>
-          <Text>sdds</Text>
-          <Text>sdds</Text>
-
-          <Text>sdds</Text>
-          <Text>sdds</Text>
-          <Text>sdds</Text>
-          <Text>sdds</Text>
-          <Text>sdds</Text>
-          <Text>sdds</Text>
-          <Text>sdds</Text>
-          <Text>sdds</Text>
-          <Text>sdds</Text>
-          <Text>sdds</Text>
-          <Text>sdds</Text>
-          <Text>sdds</Text>
-          <Text>sdds</Text>
-          <Text>sdds</Text>
-          <Text>sdds</Text>
-
-          <Text>sdds</Text>
-          <Text>sdds</Text>
-          <Text>sdds</Text>
-          <Text>sdds</Text>
-          <Text>sdds</Text>
-          <Text>sdds</Text>
-
-          <Text>sdds</Text>
-          <Text>sdds</Text>
-          <Text>sdds</Text>
-          <Text>sdds</Text>
-          <Text>sdds</Text>
-          <Text>sdds</Text>
-
-          <Text>sdds</Text>
-          <Text>sdds</Text>
-          <Text>sdds</Text>
-
-          <Text>sdds</Text>
-          <Text>sdds</Text>
-          <Text>sdds</Text>
-          <Text>sdds</Text>
-
-          <Text>sdds</Text>
-
+          <NoNotesPage />
         </ScrollView>
-
-
-        <Button labelStyle={{fontFamily:"Nunito-Regular"}} buttonColor='#D3D3D3' textColor='black' mode="contained" onPress={() => console.log('Pressed')} style={styles.TouchableOpacityStyle} >
-          <Text style={{fontFamily: "Nunito-Regular",fontSize:20}}>+</Text> Add a Note
+        <Button labelStyle={{ fontFamily: "Nunito-Regular" }} buttonColor='#D3D3D3' textColor='black' mode="contained" onPress={() => props.navigation.navigate("AddNotes")} style={styles.TouchableOpacityStyle} >
+          <Text style={{ fontFamily: "Nunito-Regular", fontSize: 20 }}>+</Text> Add a Note
         </Button>
-
       </View>
     </SafeAreaView>
   )

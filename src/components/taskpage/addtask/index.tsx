@@ -4,41 +4,38 @@ import { TouchableOpacity } from 'react-native';
 import { Button, TextInput } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Toast from 'react-native-simple-toast';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
-
-
+import SyncStorage from 'sync-storage';
+import { useSelector, useDispatch } from "react-redux"
+import { TodoState } from "./../../../todoclient/reducers/index";
+import { addTodo } from '../../../todoclient/actions';
 
 function AddTaskPage(props: any) {
-
+  const store : any = useSelector((state: TodoState) => state);
+  const dispatch = useDispatch();
   const [taskTitle, setTaskTitle]: any = useState("");
   const [taskDescription, setTaskDescription]: any = useState("");
-
-  const [showTitleError, setTitleError]: any = useState(true);
-  const [showDescriptionError, setDescriptionError]: any = useState(true);
+  const [showErrorView, setShowErrorView]: any = useState(false);
 
   const onBackClick = () => {
     props.navigation.navigate("HomePage");
   }
 
   const onAddTask = async () => {
-    console.log("Task", taskTitle.length, taskDescription.length);
-    if (taskTitle.length === 0 && taskDescription.length === 0) {
-      setTitleError(false);
-      setDescriptionError(false);
-    } else if (taskTitle.length === 0) {
-      setTitleError(true);
-    } else if (taskDescription.length === 0) {
-      setDescriptionError(true);
+    if (taskTitle.length === 0 || taskDescription.length === 0) {
+      setShowErrorView(true)
     } else {
+      let varKey: any = []
+      let tempVar: any = {
+        task_title: taskTitle,
+        task_description: taskDescription,
+        task_done: false,
+        task_id: Date.now()
+      }
+      varKey.push(tempVar);
+      dispatch(addTodo(varKey))
       props.navigation.navigate("HomePage");
       Toast.show('Task created successfully');
     }
-    // await AsyncStorage.setItem(
-    //   'myStoreKey',
-    //   taskTitle
-    // );
-
   }
 
   return (
@@ -58,9 +55,6 @@ function AddTaskPage(props: any) {
           onChangeText={text => setTaskTitle(text)}
         />
       </View>
-      {
-        !showTitleError && <Text style={styles.errortitle}>Title required!</Text>
-      }
       <View style={{ marginTop: 15 }}>
         <Text style={styles.tasktitle}>Task description</Text>
         <TextInput
@@ -72,9 +66,12 @@ function AddTaskPage(props: any) {
         />
       </View>
       {
-        !showDescriptionError && <Text style={styles.errortitle}>Description required!</Text>
+        showErrorView &&
+        <View style={styles.errorView}>
+          <Text style={styles.errorContent}>Please provide the title and description</Text>
+        </View>
       }
-      <View style={{ marginTop: 15 }}>
+      <View style={{ marginTop: 15, justifyContent: "flex-end" }}>
         <Button labelStyle={{ fontFamily: "Nunito-Regular" }} style={styles.submitButton} mode='elevated' onPress={() => onAddTask()}>ADD TASK</Button>
       </View>
     </View>
@@ -93,10 +90,10 @@ const styles = StyleSheet.create({
     color: 'black',
     fontFamily: 'Nunito-Regular'
   },
-  errortitle: {
-    fontSize: 15,
-    color: 'red',
-    fontFamily: 'Nunito-Regular'
+  errorView: {
+    // height:30,
+    marginTop: 10,
+    backgroundColor: "#FFCCCB"
   },
   inputStyle: {
     fontFamily: 'Nunito-Regular'
@@ -108,6 +105,13 @@ const styles = StyleSheet.create({
   submitButton: {
     fontFamily: 'Nunito-Regular',
     borderRadius: 0
+  },
+  errorContent: {
+    fontFamily: 'Nunito-Regular',
+    fontSize: 12,
+    color: "red",
+    margin: 10,
+    textAlign: 'center'
   }
 })
 
