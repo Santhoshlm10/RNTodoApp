@@ -3,7 +3,6 @@ import NotesPage from '../notespage';
 import TaskPage from '../taskpage';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import React from 'react';
-import { connect } from 'react-redux';
 
 const Tab = createBottomTabNavigator();
 class HomePage extends React.Component {
@@ -62,4 +61,4 @@ class HomePage extends React.Component {
 const mapStateToProps = (state:any) => {
   return state;
 }
-export default connect(mapStateToProps)(HomePage);
+export default HomePage;

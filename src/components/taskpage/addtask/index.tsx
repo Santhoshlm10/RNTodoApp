@@ -4,14 +4,10 @@ import { TouchableOpacity } from 'react-native';
 import { Button, TextInput } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Toast from 'react-native-simple-toast';
-import SyncStorage from 'sync-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useSelector, useDispatch } from "react-redux"
-import { TodoState } from "./../../../todoclient/reducers/index";
-import { addTodo } from '../../../todoclient/actions';
 
 function AddTaskPage(props: any) {
-  const store : any = useSelector((state: TodoState) => state);
-  const dispatch = useDispatch();
   const [taskTitle, setTaskTitle]: any = useState("");
   const [taskDescription, setTaskDescription]: any = useState("");
   const [showErrorView, setShowErrorView]: any = useState(false);
@@ -31,8 +27,7 @@ function AddTaskPage(props: any) {
         task_done: false,
         task_id: Date.now()
       }
-      varKey.push(tempVar);
-      dispatch(addTodo(varKey))
+      AsyncStorage.setItem('rntodo',JSON.stringify(tempVar))
       props.navigation.navigate("HomePage");
       Toast.show('Task created successfully');
     }

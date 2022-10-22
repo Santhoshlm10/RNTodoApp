@@ -1,10 +1,8 @@
 import { StyleSheet, View, Alert, ListView, Text, TouchableOpacity, Image, ScrollView, SafeAreaView } from 'react-native';
 import { Button } from "react-native-paper";
 import React, { useEffect, useState } from 'react';
-import SyncStorage from 'sync-storage';
 import NoTaskPage from './notaskpage';
-import { useSelector, useDispatch, connect } from "react-redux";
-import { TodoState } from '../../todoclient/reducers';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Modal, Portal, Provider } from 'react-native-paper';
 
 interface TaskDetails {
@@ -29,10 +27,16 @@ class TaskPage extends React.Component<any, any> {
     return state;
   }
 
-  componentDidMount(): void {
+  componentDidMount() {
     this.props.navigation.addListener('focus', () => {
-      console.log('Screen.js focused', this.props)
+      AsyncStorage.getItem('rntodo').then((result:any) => {
+        console.log("localstorage data",result)
+      })
     });
+  }
+
+  getLocalStorageData = async() => {
+    return await AsyncStorage.getItem('keyz')
   }
 
   onHideDeleteModal = () => {
@@ -117,7 +121,5 @@ const styles = StyleSheet.create({
     color: "black"
   }
 });
-const mapStateToProps = (state: any) => {
-  return state;
-}
-export default connect(mapStateToProps)(TaskPage);
+
+export default TaskPage;

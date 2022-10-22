@@ -6,7 +6,6 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import AddTaskPage from "./src/components/taskpage/addtask";
 import AddNotesPage from "./src/components/notespage/addnote";
 import { useEffect, useState } from "react";
-import { store } from "./src/todoclient/store";
 import { Provider } from "react-redux";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Button, TextInput } from "react-native-paper";
@@ -32,7 +31,6 @@ function App() {
     )
   } else {
     return (
-      <Provider store={store}>
       <NavigationContainer>
         <Stack.Navigator screenOptions={{ headerShown: false }}>
           <Stack.Screen
@@ -44,7 +42,6 @@ function App() {
           <Stack.Screen name="AddNotes" component={AddNotesPage} />
         </Stack.Navigator>
       </NavigationContainer>
-      </Provider>
     )
   }
 }
